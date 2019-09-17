@@ -104,4 +104,4 @@
 
 # UML
 
-![](https://github.com/apreczewski/ekki/blob/master/ekki.png)
+![](https://github.com/apreczewski/ekki/blob/master/backend/tmp/ekki.png)
