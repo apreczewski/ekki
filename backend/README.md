@@ -43,6 +43,12 @@
   > pg
   > pg-hstore
 
+- Descrever
+
+> jsonwebtoken
+
+> sucrase
+
 **DevDependencies**
 
 - Padrão de código airbnb:
@@ -104,4 +110,4 @@
 
 # UML
 
-![](https://github.com/apreczewski/ekki/blob/master/backend/tmp/ekki.png)
+https://github.com/apreczewski/ekki/blob/master/backend/tmp/ekki.png
