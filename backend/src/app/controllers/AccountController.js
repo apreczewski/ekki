@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import Account from '../models/Account';
 import User from '../models/User';
+import Limit from '../models/Limit';
 
 class AccountController {
   async store(request, response) {
@@ -29,12 +30,40 @@ class AccountController {
     const account = await Account.create({
       ag: request.body.ag,
       number: request.body.number,
+      sum: request.body.value,
       user_id: user.id,
       limit_id: request.body.limit_id,
     });
     return response.json({
       account,
     });
+  }
+
+  async update(request, response) {
+    const account = await Account.findOne({
+      where: {
+        user_id: request.userId,
+      },
+    });
+
+    const { limit_id, value } = request.body;
+    const limit = await Limit.findByPk(limit_id);
+
+    if (value < 0) {
+      if (value + account.sum <= limit.value) {
+        return response.status(400).json({ error: 'Your limited insuficient' });
+      }
+
+      if (account.sum <= limit.value) {
+        return response.status(400).json({ error: 'Balance insuficient' });
+      }
+
+      await account.update({ sum: account.sum + value });
+    }
+
+    await account.update({ sum: account.sum + value });
+
+    return response.json(account);
   }
 }
 

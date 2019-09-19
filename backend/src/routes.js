@@ -20,6 +20,7 @@ routes.use(authMiddleware);
 routes.post('/limits', LimitController.store);
 
 routes.post('/accounts', AccountController.store);
+routes.put('/accounts', AccountController.update);
 
 routes.post('/balances', BalanceController.store);
 
