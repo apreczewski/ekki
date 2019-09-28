@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { darken } from 'polished';
+import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
   display: flex;
@@ -89,7 +90,7 @@ export const Details = styled.div`
   padding-top: 21px;
 `;
 
-export const Transfer = styled.a`
+export const Transfer = styled(Link)`
   display: flex;
   flex-direction: column;
   align-items: center;

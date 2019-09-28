@@ -4,6 +4,22 @@ import User from '../models/User';
 import Limit from '../models/Limit';
 
 class AccountController {
+  async index(request, response) {
+    const account = await Account.findOne({
+      where: {
+        user_id: request.params.id,
+      },
+    });
+
+    if (!account) {
+      return response.status(400).json({ error: 'You haved a account!' });
+    }
+
+    return response.json({
+      account,
+    });
+  }
+
   async store(request, response) {
     const user = await User.findByPk(request.userId);
 

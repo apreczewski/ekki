@@ -2,6 +2,22 @@ import * as Yup from 'yup';
 import User from '../models/User';
 
 class UserController {
+  async index(request, response) {
+    const user = await User.findOne({
+      where: { cpf:-t.params.cpf },
+    });
+
+    if (!user) {
+      return response
+        .status(400)
+        .json({ error: 'User already exists on database!' });
+    }
+
+    return response.json({
+      user,
+    });
+  }
+
   async store(request, response) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
