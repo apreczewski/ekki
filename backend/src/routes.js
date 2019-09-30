@@ -12,16 +12,17 @@ import SessionController from './app/controllers/SessionController';
 const routes = new Router();
 
 routes.post('/users', UserController.store);
-routes.get('/users/:cpf', UserController.index);
 
 routes.post('/sessions', SessionController.store);
 
 routes.use(authMiddleware);
 
+routes.get('/users', UserController.index);
+
 routes.get('/limits/:id', LimitController.index);
 routes.post('/limits', LimitController.store);
 
-routes.get('/accounts/:', AccountController.index);
+routes.get('/accounts', AccountController.index);
 routes.post('/accounts', AccountController.store);
 routes.put('/accounts', AccountController.update);
 

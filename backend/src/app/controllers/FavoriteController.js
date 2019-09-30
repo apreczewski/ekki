@@ -5,27 +5,48 @@ import Account from '../models/Account';
 class FavoriteController {
   async index(request, response) {
     const favorites = await Favorite.findAll({
-      where: {
-        user_id: request.userId,
-      },
+      where: { user_id: request.userId },
+      include: [
+        {
+          model: Account,
+          attributes: ['ag', 'number', 'user_id'],
+          include: [
+            {
+              model: User,
+              attributes: ['name', 'cpf'],
+            },
+          ],
+        },
+      ],
     });
 
     return response.json(favorites);
   }
 
   async store(request, response) {
-    const user = await User.findByPk(request.userId);
-    const account = await Account.findByPk(request.body.account_id);
+    const userFavorite = await User.findOne({
+      where: { cpf: request.body.cpf },
+    });
 
-    if (user.id === account.user_id) {
+    if (!userFavorite) {
+      return response.status(400).json({ error: "User favorite don't exist." });
+    }
+
+    if (request.userId === userFavorite.id) {
       return response
         .status(400)
-        .json({ error: "You can't add yourself favorite." });
+        .json({ error: "You can't add yourself account with favorite." });
     }
+
+    const account = await Account.findOne({
+      where: {
+        user_id: userFavorite.id,
+      },
+    });
 
     const checkFavorite = await Favorite.findOne({
       where: {
-        user_id: user.id,
+        user_id: request.userId,
         account_id: account.id,
       },
     });
@@ -33,13 +54,14 @@ class FavoriteController {
     if (checkFavorite) {
       return response
         .status(400)
-        .json({ error: 'This Account is your favorited.' });
+        .json({ error: "You can't add twice account with favorite." });
     }
 
     const favorite = await Favorite.create({
-      user_id: user.id,
+      user_id: request.userId,
       account_id: account.id,
     });
+
     return response.json({
       favorite,
     });

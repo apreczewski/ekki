@@ -1,52 +1,70 @@
 import React, { useState, useEffect } from 'react';
 
 import { MdSend } from 'react-icons/md';
-import Item from '../../components/Item';
 import api from '../../services/api';
 
-import { Container, ListFavorite } from './styles';
+import {
+  Container,
+  Content,
+  ListFavorite,
+  Scroll,
+  Favorite,
+  InfoAccount,
+} from './styles';
 
 export default function Transfer() {
-  const [favorites, setFavorites] = useState(['teste', 'teste3']);
+  const [favorites, setFavorites] = useState([]);
   const [newFavorite, setNewFavorite] = useState('');
 
   useEffect(() => {
-    const storageFavorite = localStorage.getItem('favorites');
-
-    if (storageFavorite) {
-      setFavorites(JSON.parse(storageFavorite));
+    async function loadFavorites() {
+      const response = await api.get('favorites');
+      setFavorites(response.data);
     }
+
+    loadFavorites();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-  }, [favorites]);
-
   async function handleAddFavorite() {
-    const user = await api.get(`/users/${newFavorite}`);
-    // const account = await api.get(`/accounts`)
-    console.log();
-    // setNewFavorite(response.data);
-    setFavorites([...favorites, newFavorite]);
+    await api.post('favorites', {
+      cpf: newFavorite,
+    });
+
+    const response = await api.get('favorites');
+    setFavorites(response.data);
+
     setNewFavorite('');
   }
 
   return (
     <Container>
       <strong>List of Users to Transfer</strong>
-      <input
-        type="value"
-        placeholder="CPF"
-        value={newFavorite}
-        onChange={event => setNewFavorite(event.target.value)}
-      />
-      <button type="button" onClick={handleAddFavorite}>
-        <MdSend />
-      </button>
+      <Content>
+        <input
+          type="value"
+          placeholder="CPF"
+          value={newFavorite}
+          onChange={event => setNewFavorite(event.target.value)}
+        />
+        <button type="button" onClick={handleAddFavorite}>
+          <MdSend />
+        </button>
+      </Content>
       <ListFavorite>
-        {favorites.map(favorite => (
-          <Item favorite={favorite} />
-        ))}
+        <Scroll>
+          {favorites.map(favorite => (
+            <Favorite>
+              <strong>A</strong>
+              <InfoAccount>
+                <strong>{favorite.Account.User.name}</strong>
+                <div>
+                  <span>{`Ag ${favorite.Account.ag}`}</span>
+                  <span>{`Number ${favorite.Account.number}`}</span>
+                </div>
+              </InfoAccount>
+            </Favorite>
+          ))}
+        </Scroll>
       </ListFavorite>
     </Container>
   );

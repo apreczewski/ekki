@@ -3,7 +3,7 @@ import { darken } from 'polished';
 
 export const Wrapper = styled.div`
   height: 100%;
-  background: linear-gradient(-0deg, #28494d, #3a5f62);
+  background: linear-gradient(-0deg, #193f48, #3b6770);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,6 +13,22 @@ export const Content = styled.div`
   width: 100%;
   max-width: 315px;
   text-align: center;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    svg {
+      font-size: 55px;
+      color: #e27f46;
+    }
+
+    strong {
+      margin-top: 5px;
+      color: #e27f46;
+    }
+  }
 
   form {
     display: flex;

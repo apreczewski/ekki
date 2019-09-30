@@ -1,10 +1,11 @@
 import * as Yup from 'yup';
 import User from '../models/User';
+import Account from '../models/Account';
 
 class UserController {
   async index(request, response) {
     const user = await User.findOne({
-      where: { cpf:-t.params.cpf },
+      where: { id: request.userId },
     });
 
     if (!user) {
@@ -40,8 +41,18 @@ class UserController {
     }
 
     const user = await User.create(request.body);
+
+    const account = await Account.create({
+      ag: '0001',
+      number: String(Math.floor(Math.random() * 100000) * 1),
+      sum: 1000,
+      user_id: user.id,
+      limit_id: 1,
+    });
+
     return response.json({
       user,
+      account,
     });
   }
 

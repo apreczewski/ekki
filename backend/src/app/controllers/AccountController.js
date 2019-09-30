@@ -2,13 +2,12 @@ import * as Yup from 'yup';
 import Account from '../models/Account';
 import User from '../models/User';
 import Limit from '../models/Limit';
+// import Favorite from '../models/Favorite';
 
 class AccountController {
   async index(request, response) {
     const account = await Account.findOne({
-      where: {
-        user_id: request.params.id,
-      },
+      where: { user_id: request.userId },
     });
 
     if (!account) {
@@ -50,6 +49,7 @@ class AccountController {
       user_id: user.id,
       limit_id: request.body.limit_id,
     });
+
     return response.json({
       account,
     });
